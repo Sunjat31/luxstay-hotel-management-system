@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Staff — Admin{% endblock %}
+{% block content %}
+<section class="admin-section">
+    <div class="admin-header">
+        <h1><i class="fas fa-id-badge"></i> Staff Management</h1>
+        <a href="{{ url_for('admin.add_staff') }}" class="btn btn-gold"><i class="fas fa-plus"></i> Add Staff</a>
+    </div>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr><th>#</th><th>Name</th><th>Position</th><th>Department</th><th>Phone</th><th>Email</th><th>Salary</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+                {% for s in staff %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ s.full_name }}</td>
+                    <td>{{ s.position or '—' }}</td>
+                    <td>{{ s.department or '—' }}</td>
+                    <td>{{ s.phone or '—' }}</td>
+                    <td>{{ s.email or '—' }}</td>
+                    <td>{% if s.salary %}{{ "%.0f"|format(s.salary) }} BDT{% else %}—{% endif %}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin.delete_staff', staff_id=s.id) }}" onsubmit="return confirm('Remove staff member?')">
+                            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="8" class="text-center">No staff added yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

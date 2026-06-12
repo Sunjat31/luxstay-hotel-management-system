@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Room Types — Admin{% endblock %}
+{% block content %}
+<section class="admin-section">
+    <div class="admin-header">
+        <h1><i class="fas fa-list"></i> Room Types</h1>
+        <a href="{{ url_for('admin.add_room_type') }}" class="btn btn-gold"><i class="fas fa-plus"></i> Add Type</a>
+    </div>
+    <div class="rooms-grid">
+        {% for rt in types %}
+        <div class="category-card">
+            <h3>{{ rt.name }}</h3>
+            <p>{{ rt.description }}</p>
+            <div class="category-price">{{ "%.0f"|format(rt.base_price) }} BDT/night</div>
+            <p class="small">{{ rt.rooms|length }} room(s)</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

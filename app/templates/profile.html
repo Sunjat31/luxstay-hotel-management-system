@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Profile — LuxStay{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container narrow">
+        <div class="profile-card">
+            <div class="profile-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <h2>{{ user.full_name }}</h2>
+            <span class="badge badge-{{ 'admin' if user.is_admin() else 'confirmed' }}">
+                {{ 'Administrator' if user.is_admin() else 'Guest' }}
+            </span>
+            <div class="profile-info">
+                <div class="info-item"><i class="fas fa-at"></i> {{ user.username }}</div>
+                <div class="info-item"><i class="fas fa-envelope"></i> {{ user.email }}</div>
+                {% if user.phone %}<div class="info-item"><i class="fas fa-phone"></i> {{ user.phone }}</div>{% endif %}
+                <div class="info-item"><i class="fas fa-calendar"></i> Member since {{ user.created_at.strftime('%B %Y') }}</div>
+                <div class="info-item"><i class="fas fa-suitcase"></i> {{ user.bookings|length }} booking(s)</div>
+            </div>
+            <div class="profile-actions">
+                <a href="{{ url_for('main.my_bookings') }}" class="btn btn-gold">My Bookings</a>
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-outline">Logout</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Manage Rooms — Admin{% endblock %}
+{% block content %}
+<section class="admin-section">
+    <div class="admin-header">
+        <h1><i class="fas fa-bed"></i> Manage Rooms</h1>
+        <a href="{{ url_for('admin.add_room') }}" class="btn btn-gold"><i class="fas fa-plus"></i> Add Room</a>
+    </div>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr><th>#</th><th>Room No.</th><th>Floor</th><th>Type</th><th>Capacity</th><th>Status</th><th>Amenities</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                {% for room in rooms %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td><strong>{{ room.room_number }}</strong></td>
+                    <td>{{ room.floor }}</td>
+                    <td>{{ room.room_type.name }}</td>
+                    <td>{{ room.capacity }}</td>
+                    <td><span class="badge badge-{{ room.status }}">{{ room.status.title() }}</span></td>
+                    <td class="amenities-cell">{{ room.amenities }}</td>
+                    <td class="action-cell">
+                        <a href="{{ url_for('admin.edit_room', room_id=room.id) }}" class="btn btn-sm btn-outline"><i class="fas fa-edit"></i></a>
+                        <form method="POST" action="{{ url_for('admin.delete_room', room_id=room.id) }}" style="display:inline" onsubmit="return confirm('Delete this room?')">
+                            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

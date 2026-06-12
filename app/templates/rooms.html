@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Rooms — LuxStay Hotel{% endblock %}
+
+{% block content %}
+<section class="page-banner">
+    <h1>Our Rooms</h1>
+    <p>Find the perfect room for your stay</p>
+</section>
+
+<section class="section">
+    <div class="container">
+        <!-- Filters -->
+        <div class="filters-bar">
+            <div class="filter-group">
+                <strong>Filter by Type:</strong>
+                <a href="{{ url_for('main.rooms') }}" class="filter-btn {% if not selected_type %}active{% endif %}">All</a>
+                {% for rt in room_types %}
+                <a href="{{ url_for('main.rooms') }}?type={{ rt.id }}&status={{ selected_status }}"
+                   class="filter-btn {% if selected_type == rt.id %}active{% endif %}">{{ rt.name }}</a>
+                {% endfor %}
+            </div>
+            <div class="filter-group">
+                <strong>Status:</strong>
+                <a href="{{ url_for('main.rooms') }}?type={{ selected_type }}&status=available"
+                   class="filter-btn {% if selected_status == 'available' %}active{% endif %}">Available</a>
+                <a href="{{ url_for('main.rooms') }}?type={{ selected_type }}&status="
+                   class="filter-btn {% if not selected_status %}active{% endif %}">All</a>
+            </div>
+        </div>
+
+        <!-- Results Count -->
+        <p class="results-count">Showing <strong>{{ rooms|length }}</strong> room(s)</p>
+
+        <!-- Rooms Grid -->
+        <div class="rooms-grid">
+            {% for room in rooms %}
+            <div class="room-card">
+                <div class="room-img">
+                    {% if room.room_type.name == 'Standard' %}
+                        <img src="{{ url_for('static', filename='img/standard-room.jpg') }}" alt="Standard Room">
+                    {% elif room.room_type.name == 'Deluxe' %}
+                        <img src="{{ url_for('static', filename='img/deluxe-room.jpg') }}" alt="Deluxe Room">
+                    {% elif room.room_type.name == 'Suite' %}
+                        <img src="{{ url_for('static', filename='img/suite-room.jpg') }}" alt="Suite Room">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='img/presidential-room.jpg') }}" alt="Presidential Suite">
+                    {% endif %}
+                    <span class="room-status {{ room.status }}">
+                        {{ room.status.replace('_', ' ').title() }}
+                    </span>
+                </div>
+                <div class="room-body">
+                    <div class="room-header">
+                        <h3>Room {{ room.room_number }}</h3>
+                        <span class="room-type-tag">{{ room.room_type.name }}</span>
+                    </div>
+                    <div class="room-meta">
+                        <span><i class="fas fa-layer-group"></i> Floor {{ room.floor }}</span>
+                        <span><i class="fas fa-users"></i> Up to {{ room.capacity }} guests</span>
+                    </div>
+                    <p class="room-amenities"><i class="fas fa-check-circle"></i> {{ room.amenities }}</p>
+                    <div class="room-footer">
+                        <span class="room-price">{{ "%.0f"|format(room.room_type.base_price) }} BDT<small>/night</small></span>
+                        {% if room.status == 'available' %}
+                            {% if current_user.is_authenticated %}
+                                <a href="{{ url_for('main.book_room', room_id=room.id) }}" class="btn btn-sm btn-gold">Book Now</a>
+                            {% else %}
+                                <a href="{{ url_for('auth.login') }}" class="btn btn-sm btn-gold">Login to Book</a>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge badge-{{ room.status }}">Not Available</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="no-results">
+                <i class="fas fa-door-closed"></i>
+                <h3>No rooms found</h3>
+                <p><a href="{{ url_for('main.rooms') }}">Clear filters</a></p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

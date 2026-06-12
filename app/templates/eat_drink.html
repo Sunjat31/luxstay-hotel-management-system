@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Eat & Drink - LuxStay Hotel{% endblock %}
+
+{% block content %}
+<div class="page-header" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');">
+    <div class="container">
+        <h1>Eat & Drink</h1>
+        <p>Indulge in culinary excellence at our diverse dining options</p>
+    </div>
+</div>
+
+<section class="services-section">
+    <div class="container">
+        <div class="service-grid">
+            <div class="service-card">
+                <div class="service-image">
+                    <img src="https://images.unsplash.com/photo-1532636875304-0c89119d9b4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Breakfast Buffet">
+                </div>
+                <div class="service-icon">
+                    <i class="fas fa-coffee"></i>
+                </div>
+                <h3>Breakfast Buffet</h3>
+                <p>Start your day with our extensive breakfast buffet featuring local and international cuisine.</p>
+                <ul class="service-features">
+                    <li>Fresh pastries & breads</li>
+                    <li>Hot dishes</li>
+                    <li>Fresh fruits</li>
+                    <li>Special dietary options</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-image">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Main Restaurant">
+                </div>
+                <div class="service-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3>Main Restaurant</h3>
+                <p>Experience fine dining with our à la carte menu featuring seasonal ingredients and creative presentations.</p>
+                <ul class="service-features">
+                    <li>À la carte dining</li>
+                    <li>Wine selection</li>
+                    <li>Private dining rooms</li>
+                    <li>Outdoor terrace</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-image">
+                    <img src="https://images.unsplash.com/photo-1572116469696-31de0f17cc34?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Bar & Lounge">
+                </div>
+                <div class="service-icon">
+                    <i class="fas fa-glass-martini-alt"></i>
+                </div>
+                <h3>Bar & Lounge</h3>
+                <p>Relax with signature cocktails and premium spirits in our sophisticated bar atmosphere.</p>
+                <ul class="service-features">
+                    <li>Craft cocktails</li>
+                    <li>Premium spirits</li>
+                    <li>Live music</li>
+                    <li>Lounge seating</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-image">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Room Service">
+                </div>
+                <div class="service-icon">
+                    <i class="fas fa-concierge-bell"></i>
+                </div>
+                <h3>Room Service</h3>
+                <p>Enjoy convenience with 24/7 room service delivering meals and refreshments directly to your room.</p>
+                <ul class="service-features">
+                    <li>24/7 availability</li>
+                    <li>Express service</li>
+                    <li>Dietary requests</li>
+                    <li>Late-night menu</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="container">
+        <h2>Reserve Your Table</h2>
+        <p>Make a reservation or contact us for special dining arrangements.</p>
+        <a href="{{ url_for('main.about') }}" class="btn btn-gold">Contact Us</a>
+    </div>
+</section>
+{% endblock %}

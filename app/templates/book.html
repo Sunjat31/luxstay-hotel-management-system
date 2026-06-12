@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Book Room {{ room.room_number }} — LuxStay{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container narrow">
+        <h2 class="page-title"><i class="fas fa-calendar-check"></i> Book Room {{ room.room_number }}</h2>
+        <div class="booking-layout">
+            <div class="booking-form-card">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    {{ form.room_id() }}
+                    <div class="form-group">
+                        <label>{{ form.check_in.label }}</label>
+                        {{ form.check_in(class="form-control", type="date") }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.check_out.label }}</label>
+                        {{ form.check_out(class="form-control", type="date") }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.guests.label }}</label>
+                        {{ form.guests(class="form-control", min="1", max=room.capacity) }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.special_requests.label }}</label>
+                        {{ form.special_requests(class="form-control", rows="3", placeholder="Any special requests...") }}
+                    </div>
+                    {{ form.submit(class="btn btn-gold full-width") }}
+                </form>
+            </div>
+            <div class="booking-summary-card">
+                <h3>Room Summary</h3>
+                <div class="summary-item"><span>Room</span><strong>{{ room.room_number }}</strong></div>
+                <div class="summary-item"><span>Type</span><strong>{{ room.room_type.name }}</strong></div>
+                <div class="summary-item"><span>Floor</span><strong>{{ room.floor }}</strong></div>
+                <div class="summary-item"><span>Capacity</span><strong>{{ room.capacity }} guests</strong></div>
+                <div class="summary-item"><span>Price</span><strong>{{ "%.0f"|format(room.room_type.base_price) }} BDT/night</strong></div>
+                <hr>
+                <p class="amenities-list"><i class="fas fa-star"></i> {{ room.amenities }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

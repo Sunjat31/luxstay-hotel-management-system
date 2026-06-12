@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Register — LuxStay{% endblock %}
+{% block content %}
+<section class="auth-section">
+    <div class="auth-card wide">
+        <div class="auth-header">
+            <i class="fas fa-user-plus auth-icon"></i>
+            <h2>Create Account</h2>
+            <p>Join LuxStay for exclusive benefits</p>
+        </div>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label>{{ form.full_name.label }}</label>
+                    {{ form.full_name(class="form-control", placeholder="John Doe") }}
+                    {% for e in form.full_name.errors %}<span class="error">{{ e }}</span>{% endfor %}
+                </div>
+                <div class="form-group">
+                    <label>{{ form.username.label }}</label>
+                    {{ form.username(class="form-control", placeholder="johndoe") }}
+                    {% for e in form.username.errors %}<span class="error">{{ e }}</span>{% endfor %}
+                </div>
+                <div class="form-group">
+                    <label>{{ form.email.label }}</label>
+                    {{ form.email(class="form-control", placeholder="your@email.com") }}
+                    {% for e in form.email.errors %}<span class="error">{{ e }}</span>{% endfor %}
+                </div>
+                <div class="form-group">
+                    <label>{{ form.phone.label }}</label>
+                    {{ form.phone(class="form-control", placeholder="01XXXXXXXXX") }}
+                </div>
+                <div class="form-group">
+                    <label>{{ form.password.label }}</label>
+                    {{ form.password(class="form-control", placeholder="Min. 6 characters") }}
+                    {% for e in form.password.errors %}<span class="error">{{ e }}</span>{% endfor %}
+                </div>
+                <div class="form-group">
+                    <label>{{ form.confirm_password.label }}</label>
+                    {{ form.confirm_password(class="form-control", placeholder="Repeat password") }}
+                    {% for e in form.confirm_password.errors %}<span class="error">{{ e }}</span>{% endfor %}
+                </div>
+            </div>
+            {{ form.submit(class="btn btn-gold full-width") }}
+        </form>
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{{ url_for('auth.login') }}">Login</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

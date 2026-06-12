@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — LuxStay{% endblock %}
+{% block content %}
+<section class="admin-section">
+    <div class="admin-header">
+        <h1><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
+        <p>Hotel Management Overview</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card blue">
+            <i class="fas fa-door-open"></i>
+            <div>
+                <span class="stat-value">{{ stats.total_rooms }}</span>
+                <span class="stat-label">Total Rooms</span>
+            </div>
+        </div>
+        <div class="stat-card green">
+            <i class="fas fa-check-circle"></i>
+            <div>
+                <span class="stat-value">{{ stats.available }}</span>
+                <span class="stat-label">Available</span>
+            </div>
+        </div>
+        <div class="stat-card red">
+            <i class="fas fa-bed"></i>
+            <div>
+                <span class="stat-value">{{ stats.occupied }}</span>
+                <span class="stat-label">Occupied</span>
+            </div>
+        </div>
+        <div class="stat-card yellow">
+            <i class="fas fa-tools"></i>
+            <div>
+                <span class="stat-value">{{ stats.maintenance }}</span>
+                <span class="stat-label">Maintenance</span>
+            </div>
+        </div>
+        <div class="stat-card purple">
+            <i class="fas fa-users"></i>
+            <div>
+                <span class="stat-value">{{ stats.total_users }}</span>
+                <span class="stat-label">Guests</span>
+            </div>
+        </div>
+        <div class="stat-card orange">
+            <i class="fas fa-calendar-check"></i>
+            <div>
+                <span class="stat-value">{{ stats.active_bookings }}</span>
+                <span class="stat-label">Active Bookings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h3>Quick Actions</h3>
+        <div class="action-buttons">
+            <a href="{{ url_for('admin.manage_rooms') }}" class="action-btn"><i class="fas fa-bed"></i> Manage Rooms</a>
+            <a href="{{ url_for('admin.manage_bookings') }}" class="action-btn"><i class="fas fa-calendar"></i> All Bookings</a>
+            <a href="{{ url_for('admin.manage_users') }}" class="action-btn"><i class="fas fa-users"></i> Guests</a>
+            <a href="{{ url_for('admin.manage_staff') }}" class="action-btn"><i class="fas fa-id-badge"></i> Staff</a>
+            <a href="{{ url_for('admin.manage_services') }}" class="action-btn"><i class="fas fa-concierge-bell"></i> Services</a>
+            <a href="{{ url_for('admin.add_room') }}" class="action-btn green"><i class="fas fa-plus"></i> Add Room</a>
+            <a href="{{ url_for('admin.add_staff') }}" class="action-btn green"><i class="fas fa-user-plus"></i> Add Staff</a>
+        </div>
+    </div>
+
+    <!-- Recent Bookings -->
+    <div class="recent-section">
+        <div class="section-title-row">
+            <h3>Recent Bookings</h3>
+            <a href="{{ url_for('admin.manage_bookings') }}" class="btn btn-sm btn-outline">View All</a>
+        </div>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Guest</th>
+                        <th>Room</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in recent_bookings %}
+                    <tr>
+                        <td>#{{ b.id }}</td>
+                        <td>{{ b.guest.full_name }}</td>
+                        <td>Room {{ b.room.room_number }}</td>
+                        <td>{{ b.check_in.strftime('%d %b') }}</td>
+                        <td>{{ b.check_out.strftime('%d %b') }}</td>
+                        <td>{{ "%.0f"|format(b.total_amount) }} BDT</td>
+                        <td><span class="badge badge-{{ b.status }}">{{ b.status.title() }}</span></td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin.update_booking_status', booking_id=b.id) }}" style="display:inline">
+                                <select name="status" onchange="this.form.submit()" class="mini-select">
+                                    {% for s in ['confirmed','checked_in','checked_out','cancelled'] %}
+                                    <option value="{{ s }}" {% if b.status == s %}selected{% endif %}>{{ s.replace('_',' ').title() }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="8" class="text-center">No bookings yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

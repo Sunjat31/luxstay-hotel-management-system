@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - LuxStay Hotel{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1>{{ title }}</h1>
+        <p>Upload a new image for the {{ feature }} feature</p>
+    </div>
+</div>
+
+<section class="upload-section">
+    <div class="container">
+        <div class="upload-form-container">
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.image.label }}
+                    {{ form.image(class="form-control-file") }}
+                    {% if form.image.errors %}
+                        {% for error in form.image.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-actions">
+                    {{ form.submit(class="btn btn-gold") }}
+                    <a href="{{ url_for('main.swimming_health') }}" class="btn btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+        
+        <div class="upload-info">
+            <h3>Upload Guidelines</h3>
+            <ul>
+                <li>Supported formats: JPG, PNG, GIF</li>
+                <li>Maximum file size: 16MB</li>
+                <li>Recommended resolution: 800x600 or higher</li>
+                <li>Images will be automatically resized for optimal display</li>
+            </ul>
+        </div>
+    </div>
+</section>
+{% endblock %}

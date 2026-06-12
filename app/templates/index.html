@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block title %}LuxStay Hotel — Luxury Redefined{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <span class="hero-tag">5-Star Experience</span>
+        <h1>Welcome to <span class="gold">LuxStay</span></h1>
+        <p>Where every stay is a masterpiece. Premium rooms, world-class service, unforgettable memories.</p>
+        <div class="hero-actions">
+            <a href="{{ url_for('main.rooms') }}" class="btn btn-gold">Explore Rooms</a>
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('auth.register') }}" class="btn btn-outline">Book Now</a>
+            {% else %}
+                <a href="{{ url_for('main.rooms') }}" class="btn btn-outline">Book Now</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="stats-bar">
+    <div class="stat-item">
+        <span class="stat-num">{{ stats.total_rooms }}+</span>
+        <span class="stat-label">Total Rooms</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-num">{{ stats.available }}</span>
+        <span class="stat-label">Available Now</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-num">{{ stats.room_types }}</span>
+        <span class="stat-label">Room Categories</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-num">5★</span>
+        <span class="stat-label">Rating</span>
+    </div>
+</section>
+
+<!-- Search Section -->
+<section class="search-section">
+    <div class="search-card">
+        <h2><i class="fas fa-search"></i> Find Your Perfect Room</h2>
+        <form method="POST" action="{{ url_for('main.index') }}">
+            {{ form.hidden_tag() }}
+            <div class="search-grid">
+                <div class="form-group">
+                    <label>Check-in</label>
+                    {{ form.check_in(class="form-control", type="date") }}
+                </div>
+                <div class="form-group">
+                    <label>Check-out</label>
+                    {{ form.check_out(class="form-control", type="date") }}
+                </div>
+                <div class="form-group">
+                    <label>Room Type</label>
+                    {{ form.room_type(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label>Guests</label>
+                    {{ form.guests(class="form-control", min="1", max="10") }}
+                </div>
+                <div class="form-group search-btn-wrap">
+                    {{ form.submit(class="btn btn-gold full-width") }}
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Room Categories -->
+<section class="room-categories section">
+    <div class="section-header">
+        <h2>Our Room Categories</h2>
+        <p>From cozy standard rooms to lavish presidential suites</p>
+    </div>
+    <div class="category-grid">
+        {% for rt in room_types %}
+        <div class="category-card">
+            <div class="category-icon">
+                {% if rt.name == 'Standard' %}<i class="fas fa-bed"></i>
+                {% elif rt.name == 'Deluxe' %}<i class="fas fa-star"></i>
+                {% elif rt.name == 'Suite' %}<i class="fas fa-crown"></i>
+                {% else %}<i class="fas fa-gem"></i>{% endif %}
+            </div>
+            <h3>{{ rt.name }}</h3>
+            <p>{{ rt.description }}</p>
+            <div class="category-price">From {{ "%.0f"|format(rt.base_price) }} BDT/night</div>
+            <a href="{{ url_for('main.rooms') }}?type={{ rt.id }}" class="btn btn-sm btn-outline">View Rooms</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Available Rooms -->
+<section class="available-rooms section">
+    <div class="section-header">
+        <h2>Available Rooms</h2>
+        <p>{{ rooms|length }} room(s) ready for your stay</p>
+    </div>
+    <div class="rooms-grid">
+        {% for room in rooms[:6] %}
+        <div class="room-card">
+            <div class="room-img">
+                {% if room.room_type.name == 'Standard' %}
+                    <img src="{{ url_for('static', filename='img/standard-room.jpg') }}" alt="Standard Room">
+                {% elif room.room_type.name == 'Deluxe' %}
+                    <img src="{{ url_for('static', filename='img/deluxe-room.jpg') }}" alt="Deluxe Room">
+                {% elif room.room_type.name == 'Suite' %}
+                    <img src="{{ url_for('static', filename='img/suite-room.jpg') }}" alt="Suite Room">
+                {% else %}
+                    <img src="{{ url_for('static', filename='img/presidential-room.jpg') }}" alt="Presidential Suite">
+                {% endif %}
+                <span class="room-status available">Available</span>
+            </div>
+            <div class="room-body">
+                <div class="room-header">
+                    <h3>Room {{ room.room_number }}</h3>
+                    <span class="room-type-tag">{{ room.room_type.name }}</span>
+                </div>
+                <div class="room-meta">
+                    <span><i class="fas fa-layer-group"></i> Floor {{ room.floor }}</span>
+                    <span><i class="fas fa-users"></i> Up to {{ room.capacity }} guests</span>
+                </div>
+                <p class="room-amenities">{{ room.amenities }}</p>
+                <div class="room-footer">
+                    <span class="room-price">{{ "%.0f"|format(room.room_type.base_price) }} BDT<small>/night</small></span>
+                    {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('main.book_room', room_id=room.id) }}" class="btn btn-sm btn-gold">Book Now</a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-sm btn-gold">Login to Book</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="no-results">
+            <i class="fas fa-search"></i>
+            <p>No rooms match your search. <a href="{{ url_for('main.index') }}">Reset filters</a></p>
+        </div>
+        {% endfor %}
+    </div>
+    {% if rooms|length > 6 %}
+    <div class="text-center">
+        <a href="{{ url_for('main.rooms') }}" class="btn btn-outline">View All Rooms</a>
+    </div>
+    {% endif %}
+</section>
+
+<!-- Features -->
+<section class="features section dark-section">
+    <div class="section-header light">
+        <h2>Why Choose LuxStay?</h2>
+        <p>Premium amenities for an unmatched experience</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-item">
+            <i class="fas fa-wifi"></i>
+            <h3>High-Speed WiFi</h3>
+            <p>Blazing fast internet throughout the property</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-concierge-bell"></i>
+            <h3>24/7 Concierge</h3>
+            <p>Round-the-clock service for all your needs</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-utensils"></i>
+            <h3>Gourmet Dining</h3>
+            <p>World-class cuisine from international chefs</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-swimming-pool"></i>
+            <h3>Rooftop Pool</h3>
+            <p>Stunning pool with panoramic city views</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-spa"></i>
+            <h3>Luxury Spa</h3>
+            <p>Rejuvenating treatments and wellness center</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Secure Parking</h3>
+            <p>24/7 monitored underground parking facility</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

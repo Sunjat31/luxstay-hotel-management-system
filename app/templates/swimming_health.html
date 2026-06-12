@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Swimming & Health - LuxStay Hotel{% endblock %}
+
+{% block content %}
+<div class="page-header" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');">
+    <div class="container">
+        <h1>Swimming & Health</h1>
+        <p>Rejuvenate your body and mind with our comprehensive wellness facilities</p>
+    </div>
+</div>
+
+<section class="services-section">
+    <div class="container">
+        <div class="service-grid">
+            {% for service in services %}
+            <div class="service-card">
+                <div class="service-image">
+                    {% if service.image_path %}
+                    {% set image_file = service.image_path if service.image_path.startswith('img/') else 'img/' + service.image_path %}
+                    <img src="{{ url_for('static', filename=image_file) }}" alt="{{ service.name }}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'">
+                    {% else %}
+                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="{{ service.name }}">
+                    {% endif %}
+                    {% if current_user.is_authenticated and current_user.is_admin() %}
+                        <a href="{{ url_for('admin.edit_service', service_id=service.id) }}" class="upload-btn" title="Edit service">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="service-icon">
+                    <i class="{{ service.icon_class or 'fas fa-concierge-bell' }}"></i>
+                </div>
+                <h3>{{ service.name }}</h3>
+                <p>{{ service.description or 'Enjoy our premium facilities designed for your comfort and relaxation.' }}</p>
+                {% if service.features %}
+                <ul class="service-features">
+                    {% for feature in service.features.split(',') %}
+                    <li>{{ feature.strip() }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="container">
+        <h2>Book Your Wellness Experience</h2>
+        <p>Join our wellness programs or reserve facilities for your stay.</p>
+        <a href="{{ url_for('main.about') }}" class="btn btn-gold">Contact Us</a>
+    </div>
+</section>
+{% endblock %}

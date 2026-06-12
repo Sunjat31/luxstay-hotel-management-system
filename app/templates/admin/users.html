@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Manage Users — Admin{% endblock %}
+{% block content %}
+<section class="admin-section">
+    <div class="admin-header"><h1><i class="fas fa-users"></i> All Guests</h1></div>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr><th>#</th><th>Name</th><th>Username</th><th>Email</th><th>Phone</th><th>Role</th><th>Bookings</th><th>Joined</th></tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ user.full_name }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone or '—' }}</td>
+                    <td><span class="badge badge-{{ 'admin' if user.is_admin() else 'confirmed' }}">{{ user.role.title() }}</span></td>
+                    <td>{{ user.bookings|length }}</td>
+                    <td>{{ user.created_at.strftime('%d %b %Y') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
